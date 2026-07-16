@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Menu, X, ChevronDown } from "lucide-react"
@@ -78,21 +78,41 @@ export function Navbar() {
   const [isLeatherOpen, setIsLeatherOpen] = useState(false)
   const [isMobileLeatherOpen, setIsMobileLeatherOpen] = useState(false)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 15) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+    window.addEventListener("scroll", handleScroll)
+    handleScroll()
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
-      <nav className="flex items-center justify-between px-6 py-4 lg:px-12 max-w-7xl mx-auto w-full">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled 
+        ? "bg-background/90 backdrop-blur-md border-b border-border/40 shadow-sm" 
+        : "bg-transparent"
+    }`}>
+      <nav className={`flex items-center justify-between px-6 max-w-7xl mx-auto w-full transition-all duration-300 ${
+        isScrolled ? "py-4 lg:px-12" : "py-6 lg:px-12"
+      }`}>
         {/* Logo and Brand Name */}
-        <Link href="/#home" className="flex items-center gap-3 z-10" aria-label="Vertex Leathers">
+        <Link href="/#home" className="flex items-center gap-3.5 z-10" aria-label="Vertex Leathers">
           <Image
             src="/vertex-logo.png"
             alt="Vertex Leathers Logo"
-            width={40}
-            height={40}
+            width={48}
+            height={48}
             priority
-            className="h-10 w-auto object-contain"
+            className="h-12 w-auto object-contain"
           />
-          <span className="font-sans font-bold uppercase tracking-wider text-foreground text-sm sm:text-base whitespace-nowrap">
+          <span className="font-sans font-bold uppercase tracking-wider text-foreground text-base sm:text-lg lg:text-xl whitespace-nowrap">
             VERTEX LEATHERS
           </span>
         </Link>
@@ -101,13 +121,13 @@ export function Navbar() {
         <div className="hidden lg:flex items-center gap-8">
           <Link
             href="/#home"
-            className="text-xs tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold"
+            className="text-sm tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold"
           >
             Home
           </Link>
           <Link
             href="/#tannery"
-            className="text-xs tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold"
+            className="text-sm tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold"
           >
             Tannery
           </Link>
@@ -119,10 +139,10 @@ export function Navbar() {
             onMouseLeave={() => setIsLeatherOpen(false)}
           >
             <button
-              className="flex items-center gap-1 text-xs tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold py-2"
+              className="flex items-center gap-1 text-sm tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold py-2"
             >
               Leather
-              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isLeatherOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isLeatherOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isLeatherOpen && (
@@ -153,7 +173,7 @@ export function Navbar() {
 
           <Link
             href="/#contact"
-            className="text-xs tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold"
+            className="text-sm tracking-[0.2em] uppercase text-foreground hover:text-muted-foreground transition-colors font-semibold"
           >
             Contact Us
           </Link>
@@ -174,14 +194,14 @@ export function Navbar() {
             <div className="flex flex-col gap-4">
               <Link
                 href="/#home"
-                className="text-sm tracking-[0.2em] uppercase text-foreground font-semibold py-2 border-b border-border/40"
+                className="text-base tracking-[0.2em] uppercase text-foreground font-semibold py-2 border-b border-border/40"
                 onClick={() => setIsOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/#tannery"
-                className="text-sm tracking-[0.2em] uppercase text-foreground font-semibold py-2 border-b border-border/40"
+                className="text-base tracking-[0.2em] uppercase text-foreground font-semibold py-2 border-b border-border/40"
                 onClick={() => setIsOpen(false)}
               >
                 Tannery
@@ -191,7 +211,7 @@ export function Navbar() {
               <div className="border-b border-border/40 py-2">
                 <button
                   onClick={() => setIsMobileLeatherOpen(!isMobileLeatherOpen)}
-                  className="flex items-center justify-between w-full text-sm tracking-[0.2em] uppercase text-foreground font-semibold"
+                  className="flex items-center justify-between w-full text-base tracking-[0.2em] uppercase text-foreground font-semibold"
                 >
                   <span>Leather</span>
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMobileLeatherOpen ? 'rotate-180' : ''}`} />
@@ -235,7 +255,7 @@ export function Navbar() {
 
               <Link
                 href="/#contact"
-                className="text-sm tracking-[0.2em] uppercase text-foreground font-semibold py-2"
+                className="text-base tracking-[0.2em] uppercase text-foreground font-semibold py-2"
                 onClick={() => setIsOpen(false)}
               >
                 Contact Us
