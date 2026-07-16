@@ -7,7 +7,7 @@ const facts = [
   },
   {
     label: "Founder",
-    value: "Shamim Ahmed",
+    value: "Shamim Ahmad",
   },
   {
     label: "Headquarters",
@@ -43,7 +43,7 @@ export function EditorialSection() {
 
         <div className="lg:pt-16">
           <p className="font-serif text-2xl md:text-3xl text-foreground leading-snug text-balance mb-8">
-            Founded in 2000 by Shamim Ahmed in Jajmau, Kanpur.
+            Founded in 2000 by Shamim Ahmad in Jajmau, Kanpur.
           </p>
           <div className="space-y-6 text-muted-foreground leading-relaxed font-sans">
             <p>

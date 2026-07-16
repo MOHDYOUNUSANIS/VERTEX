@@ -6,8 +6,8 @@ import { ArrowRight, MapPin, Mail, Phone } from "lucide-react"
 
 const details = [
   { icon: MapPin, label: "Address", value: "Industrial Estate, Leather District" },
-  { icon: Mail, label: "Email", value: "hello@vertexleathers.com" },
-  { icon: Phone, label: "Phone", value: "+1 (555) 018 2278" },
+  { icon: Mail, label: "Email", value: "vertexleather786@gmail.com" },
+  { icon: Phone, label: "Phone", value: "+91 8576010070" },
 ]
 
 export function NewsletterSection() {
