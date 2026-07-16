@@ -16,6 +16,8 @@ export default function LeatherDetailPage({ params }: { params: Promise<{ slug: 
 
   // Form states
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -46,10 +48,35 @@ export default function LeatherDetailPage({ params }: { params: Promise<{ slug: 
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Simulate API request
-    setFormSubmitted(true)
+    setIsSubmitting(true)
+    setSubmitError(null)
+
+    try {
+      const response = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          leatherName: leather.name,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to submit inquiry.")
+      }
+
+      setFormSubmitted(true)
+    } catch (err: any) {
+      setSubmitError(err.message || "An unexpected error occurred. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -293,12 +320,19 @@ export default function LeatherDetailPage({ params }: { params: Promise<{ slug: 
                     />
                   </div>
 
+                  {submitError && (
+                    <div className="text-red-650 bg-red-50 border border-red-200 p-4 rounded text-xs font-sans text-center">
+                      {submitError}
+                    </div>
+                  )}
+
                   <div className="text-center pt-2">
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground text-background text-xs tracking-[0.2em] uppercase rounded hover:opacity-90 transition-all font-semibold font-sans w-full sm:w-auto"
+                      disabled={isSubmitting}
+                      className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-foreground text-background text-xs tracking-[0.2em] uppercase rounded hover:opacity-90 disabled:opacity-50 transition-all font-semibold font-sans w-full sm:w-auto"
                     >
-                      <span>Submit Inquiry</span>
+                      <span>{isSubmitting ? "Submitting..." : "Submit Inquiry"}</span>
                       <Send className="h-3 w-3" />
                     </button>
                   </div>

@@ -13,11 +13,36 @@ const details = [
 export function NewsletterSection() {
   const [form, setForm] = useState({ name: "", email: "", message: "" })
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
-    setForm({ name: "", email: "", message: "" })
+    setIsSubmitting(true)
+    setSubmitError(null)
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to send message.")
+      }
+
+      setSubmitted(true)
+      setForm({ name: "", email: "", message: "" })
+    } catch (err: any) {
+      setSubmitError(err.message || "An unexpected error occurred. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -93,11 +118,17 @@ export function NewsletterSection() {
               className="w-full bg-transparent border border-background/20 px-4 py-3 text-sm text-background placeholder:text-background/40 focus:outline-none focus:border-background/50 transition-colors font-sans resize-none"
             />
           </div>
+          {submitError && (
+            <p className="text-xs text-red-300 font-sans" role="alert">
+              {submitError}
+            </p>
+          )}
           <button
             type="submit"
-            className="inline-flex items-center justify-center gap-2 bg-background text-foreground px-6 py-3 text-xs tracking-[0.2em] uppercase hover:bg-background/90 transition-colors font-sans"
+            disabled={isSubmitting}
+            className="inline-flex items-center justify-center gap-2 bg-background text-foreground px-6 py-3 text-xs tracking-[0.2em] uppercase hover:bg-background/90 disabled:opacity-50 transition-colors font-sans"
           >
-            Send Message
+            {isSubmitting ? "Sending..." : "Send Message"}
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
           {submitted && (
