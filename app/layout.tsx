@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'Vertex — 100% Genuine Leather',
+  title: 'Vertex Leathers',
   description: 'Vertex is a heritage leather house crafting genuine leather with respect for nature. Explore our tannery, history, and CSR initiatives.',
   other: {
     'theme-color': '#f3ece3',
